@@ -1,18 +1,26 @@
 const express = require('express');
 const cors = require('cors');
+const { connectionDB } = require('../database/config');
 
 class Server {
 
     constructor() {
         this.app  = express();
         this.port = process.env.PORT;
-        this.usuariosPath = '/api/users';
+        this.usersPath = '/api/users';
+
+        // Connection DB
+        this.connectDB();
 
         // Middlewares
         this.middlewares();
 
-        // Rutas de mi aplicación
+        // Application routes
         this.routes();
+    }
+
+    async connectDB() { 
+        await connectionDB();
     }
 
     middlewares() {
@@ -20,21 +28,21 @@ class Server {
         // CORS
         this.app.use( cors() );
 
-        // Lectura y parseo del body
+        // Read and parse to body
         this.app.use( express.json() );
 
-        // Directorio Público
+        // Public directory
         this.app.use( express.static('public') );
 
     }
 
     routes() {
-        this.app.use( this.usuariosPath, require('../routes/user'));
+        this.app.use( this.usersPath, require('../routes/user'));
     }
 
     listen() {
         this.app.listen( this.port, () => {
-            console.log('Servidor corriendo en puerto', this.port );
+            console.log('Server running http://localhost:'+ this.port );
         });
     }
 
