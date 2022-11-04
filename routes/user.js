@@ -5,19 +5,27 @@ const { body, check } = require('express-validator');
 // Custom middlewares
 const {validateJWT, validationFields, isAdminRole, hasRole } = require('../middlewares');
 
-const { getUsers, usuariosPut, registerUser, usuariosDelete, usuariosPatch, addPurchase } = require('../controllers/userController');
+const { getUsers, usuariosPut, registerUser, usuariosDelete, usuariosPatch, addPurchase, getUserByID } = require('../controllers/userController');
 const { emailExists, isValidRole, userByIdExists } = require('../helpers/validatorDB');
 
 const router = Router();
 
-
+// GET ALL
 router.get('/', getUsers );
 
+// GET ONE
+router.get('/:id', [
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom( userByIdExists ),
+    validationFields
+], getUserByID );
 
 // UPDATE
 router.put('/update/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( userByIdExists ),
+    validateJWT,
+    hasRole('USER_ROLE', 'ADMIN_ROLE'),
     validationFields
 ],usuariosPut );
 

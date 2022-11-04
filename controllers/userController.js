@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs')
 const User = require('../models/user');
 const { emailExists } = require('../helpers/validatorDB');
 
-
+// GET ALL
 const getUsers = async (req = request, res = response) => {
 
     const { from = 0 } = req.query;
@@ -17,6 +17,19 @@ const getUsers = async (req = request, res = response) => {
 
 }
 
+// GET ONE
+const getUserByID = async ( req, res = response ) => {
+
+    const { id } = req.params;
+    const user = await User.findById(id);
+
+    res.json({
+        user
+    })
+
+}
+
+// CREATE
 const registerUser = async (req, res = response) => {
 
     const { name, email, password, role } = req.body;
@@ -55,8 +68,9 @@ const addPurchase = async ( req, res = response ) => {
     
     const { purchase } = await User.findById( req.user.id );
     const { cant, total, ...rest } = req.body;
+    const uid = req.user._id;
 
-    const purchaseID = purchase.length + 1;
+    const purchaseID = `${uid}${purchase.length + 1}`;
     
     let today = new Date();
     let day = today.getDate();
@@ -75,7 +89,7 @@ const addPurchase = async ( req, res = response ) => {
 
     try {
         
-        await User.findByIdAndUpdate( req.user._id, { purchase: purchase })
+        await User.findByIdAndUpdate( uid , { purchase: purchase })
 
     } catch (error) {
         res.status(400).json({
@@ -110,6 +124,7 @@ const usuariosDelete = async (req, res = response) => {
 
 module.exports = {
     addPurchase,
+    getUserByID,
     getUsers,
     registerUser,
     usuariosPut,

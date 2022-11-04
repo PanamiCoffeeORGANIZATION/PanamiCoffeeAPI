@@ -19,6 +19,7 @@ router.get('/:id', [
 // Create category - privado - cualquier persona con token valido
 router.post('/', [
     validateJWT,
+    isAdminRole,
     body('name', 'El nombre es obligatorio').not().isEmpty(),
     validationFields
 ], createCategory )
@@ -26,6 +27,7 @@ router.post('/', [
 // Update category - privado - cualquier persona con token valido
 router.put('/:id', [
     validateJWT,
+    isAdminRole,
     body('name', 'El nombre es obligatorio').not().isEmpty(),
     check('id').custom( categoryByIdExists ),
     validationFields
