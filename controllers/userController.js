@@ -50,10 +50,46 @@ const usuariosPut = async (req, res = response) => {
     res.json({ user });
 }
 
-const usuariosPatch = (req, res = response) => {
+// ADD PURCHASES
+const addPurchase = async ( req, res = response ) => {
+    
+    const { purchase } = await User.findById( req.user.id );
+    const { cant, total, ...rest } = req.body;
+
+    const purchaseID = purchase.length + 1;
+    
+    let today = new Date();
+    let day = today.getDate();
+    let month = today.getMonth() + 1;
+    let year = today.getFullYear();
+    
+    const data = {
+        id: purchaseID,
+        cant,
+        total,
+        date: `${year}/${month}/${day}`
+    }
+    
+    // Adding
+    purchase.push( data );
+
+    try {
+        
+        await User.findByIdAndUpdate( req.user._id, { purchase: purchase })
+
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: "Hubo un error al realizar la compra"
+        })
+    }
+
     res.json({
-        msg: 'patch API - usuariosPatch'
-    });
+        ok: true,
+        msg: "La compra ha sido exitosa",
+        purchase
+    })
+
 }
 
 const usuariosDelete = async (req, res = response) => {
@@ -61,9 +97,11 @@ const usuariosDelete = async (req, res = response) => {
     const { id } = req.params;
 
     const user = await User.findByIdAndUpdate( id, { state: false });
+    const authUser = req.user;
     
     res.json({
-        user
+        user,
+        authUser
     });
 }
 
@@ -71,9 +109,9 @@ const usuariosDelete = async (req, res = response) => {
 
 
 module.exports = {
+    addPurchase,
     getUsers,
     registerUser,
     usuariosPut,
-    usuariosPatch,
     usuariosDelete,
 }

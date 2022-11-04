@@ -29,6 +29,10 @@ const UserSchema = Schema({
     google : {
         type: Boolean,
         default : false
+    },
+    purchase : {
+        type: Array,
+        default: []
     }
 });
 
