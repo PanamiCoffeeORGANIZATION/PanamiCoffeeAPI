@@ -44,7 +44,7 @@ const updateCategory = async ( req, res = response ) => {
 
     res.json({
         ok: true,
-        msg: "Categoria actualizada con exito"
+        msg: "Categoria actualizada con éxito"
     })
 
 } 
@@ -67,8 +67,6 @@ const createCategory = async ( req, res = response ) => {
 
     const nameCategory = req.body.name.toUpperCase();
     const categoryDB = await Category.findOne({ name: nameCategory });
-
-    console.log( nameCategory );
 
     if ( categoryDB ) {
         return res.status(400).json({
