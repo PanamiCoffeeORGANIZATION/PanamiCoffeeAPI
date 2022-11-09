@@ -41,7 +41,7 @@ const login = async ( req, res = response ) => {
         res.json({
             msg: 'Inicio exitoso',
             ok: true,
-            role: userExists.role,
+            user: userExists,
             token
         })
 

@@ -43,6 +43,7 @@ const registerUser = async (req, res = response) => {
     await user.save();
 
     res.json({
+        ok: true,
         msg: 'Registro Exitoso',
         user
     });
