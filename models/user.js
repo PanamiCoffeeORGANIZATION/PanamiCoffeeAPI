@@ -16,6 +16,7 @@ const UserSchema = Schema({
     },
     img : {
         type: String,
+        default: "https://img.freepik.com/vector-gratis/lindo-buho-bebiendo-cafe-dibujos-animados-vector-icono-ilustracion-animal-bebida-icono-concepto-aislado-plano_138676-4573.jpg?w=740&t=st=1667919443~exp=1667920043~hmac=1f5ed6d05d63d99d30f7915274a640775938f0484d2f65653b5a3eeaa5041f9d"
     },
     role : {
         type: String,
