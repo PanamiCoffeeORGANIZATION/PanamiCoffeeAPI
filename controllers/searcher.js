@@ -88,7 +88,7 @@ const searchProductsByCategory = async (word = '', res = response) => {
     const isMongoID = ObjectId.isValid(word)
 
     if (isMongoID) {
-        const product = await Product.find({ category: ObjectId(word) })
+        const product = await Product.find({ category: ObjectId(word), state: true })
             .populate('category', 'name')
 
         return res.json({
@@ -98,7 +98,7 @@ const searchProductsByCategory = async (word = '', res = response) => {
 
     const regex = new RegExp(word, 'i')
 
-    const categories = await Category.find({ name: regex, status: true })
+    const categories = await Category.find({ name: regex, state: true })
 
     if ( !categories.length ) {
         return res.json({
@@ -110,9 +110,8 @@ const searchProductsByCategory = async (word = '', res = response) => {
         $or: [...categories.map(category => ({
             category: category._id
         }))],
-        $and: [{ status: true }]
+        $and: [{ state: true }]
     }).populate('category', 'name')
-
 
     res.json({
         result:products
