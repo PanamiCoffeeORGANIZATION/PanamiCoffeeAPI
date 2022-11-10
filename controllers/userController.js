@@ -1,7 +1,7 @@
-const { response, request } = require('express');
+const { response, request, json } = require('express');
 const bcryptjs = require('bcryptjs')
 const User = require('../models/user');
-const { emailExists } = require('../helpers/validatorDB');
+const Product = require('../models/product');
 
 // GET ALL
 const getUsers = async (req = request, res = response) => {
@@ -64,11 +64,23 @@ const usuariosPut = async (req, res = response) => {
     res.json({ user });
 }
 
+// Validate TOKEN
+const validateToken = async ( req, res = response ) => {
+
+    res.json({
+        ok: true,
+        msg: 'El token es válido',
+        user: req.user
+    })
+
+}
+
 // ADD PURCHASES
 const addPurchase = async ( req, res = response ) => {
     
     const { purchase } = await User.findById( req.user.id );
-    const { cant, total, ...rest } = req.body;
+    const { cant, total, products, ...rest } = req.body;
+
     const uid = req.user._id;
 
     const purchaseID = `${uid}${purchase.length + 1}`;
@@ -77,11 +89,18 @@ const addPurchase = async ( req, res = response ) => {
     let day = today.getDate();
     let month = today.getMonth() + 1;
     let year = today.getFullYear();
+
+    // Formating minutes-adding zero if it has one character
+    const time = new Date();
+    let minutes = time.getMinutes();
+    minutes < 10 ? minutes = `0${minutes}` : minutes
     
     const data = {
         id: purchaseID,
         cant,
         total,
+        products,
+        time: `${time.getHours()}:${minutes}`,
         date: `${year}/${month}/${day}`
     }
     
@@ -90,7 +109,15 @@ const addPurchase = async ( req, res = response ) => {
 
     try {
         
-        await User.findByIdAndUpdate( uid , { purchase: purchase })
+        await User.findByIdAndUpdate( uid , { purchase: purchase });
+
+        // Removing items from stock
+        products.map( async product => {
+
+            const { stock } = await Product.findById( product.id );
+            await Product.findByIdAndUpdate( product.id, { stock : stock - product.amount } )
+
+        })
 
     } catch (error) {
         res.status(400).json({
@@ -120,9 +147,6 @@ const usuariosDelete = async (req, res = response) => {
     });
 }
 
-
-
-
 module.exports = {
     addPurchase,
     getUserByID,
@@ -130,4 +154,5 @@ module.exports = {
     registerUser,
     usuariosPut,
     usuariosDelete,
+    validateToken
 }

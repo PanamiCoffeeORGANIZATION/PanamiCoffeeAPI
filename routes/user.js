@@ -5,7 +5,7 @@ const { body, check } = require('express-validator');
 // Custom middlewares
 const {validateJWT, validationFields, isAdminRole, hasRole } = require('../middlewares');
 
-const { getUsers, usuariosPut, registerUser, usuariosDelete, usuariosPatch, addPurchase, getUserByID } = require('../controllers/userController');
+const { getUsers, usuariosPut, registerUser, usuariosDelete, usuariosPatch, addPurchase, getUserByID, validateToken } = require('../controllers/userController');
 const { emailExists, isValidRole, userByIdExists } = require('../helpers/validatorDB');
 
 const router = Router();
@@ -53,11 +53,18 @@ router.put('/purchase', [
     validateJWT,
     hasRole('USER_ROLE'),
     body('cant', 'La cantidad es obligatoria').not().isEmpty(),
+    body('products', 'Los productos son requeridos').not().isEmpty(),
     body('total', 'El total de la compra es obligatorio').not().isEmpty(),
     body('cant', 'La cantidad debe ser numérica').isNumeric(),
     body('total', 'El total debe ser numérico').isNumeric(),
     validationFields
 ], addPurchase )
+
+// VALIDATE TOKEN
+router.get('/token/validateToken', [
+    validateJWT,
+    hasRole('USER_ROLE','ADMIN_ROLE','EMPLOYEE_ROLE'),
+], validateToken )
 
 
 

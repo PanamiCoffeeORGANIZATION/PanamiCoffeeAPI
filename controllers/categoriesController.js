@@ -6,10 +6,10 @@ const Category = require("../models/category");
 const getCategories = async ( req, res = response ) => {
 
     const { from = 0 } = req.query;
-    const categories = await Category.find()
+    const categories = await Category.find( {state:true} )
     .populate('user', 'name')
-    .limit(5)
-    .skip( Number(from) )
+    // .limit(5)
+    // .skip( Number(from) )
 
     res.json({
         ok: true,

@@ -5,7 +5,7 @@ const Product = require("../models/product");
 // GET Products
 const getProducts = async ( req, res = response ) => {
 
-    const products = await Product.find()
+    const products = await Product.find( { state: true })
     .populate('category', 'name')
     .populate('user', 'name')
     .sort({ name: 1 })
