@@ -6,12 +6,15 @@ const { body, check } = require('express-validator');
 const {validateJWT, validationFields, isAdminRole } = require('../middlewares');
 
 const { userByIdExists, categoryByIdExists, productByIdExists } = require('../helpers/validatorDB');
-const { createProduct, getProducts, getProduct, updateProduct, deleteProduct } = require('../controllers/productsController');
+const { createProduct, getProducts, getProduct, updateProduct, deleteProduct, getProductsByPage } = require('../controllers/productsController');
 
 const router = Router();
 
 
 router.get('/', getProducts );
+
+// GET BY PAGE
+router.get('/page', getProductsByPage );
 
 // Get Product by id - publico
 router.get('/:id', [
