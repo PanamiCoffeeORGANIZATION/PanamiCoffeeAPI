@@ -8,6 +8,7 @@ const getCategories = async ( req, res = response ) => {
     const { from = 0 } = req.query;
     const categories = await Category.find( {state:true} )
     .populate('user', 'name')
+    .sort({ name: 1 })
     // .limit(5)
     // .skip( Number(from) )
 
