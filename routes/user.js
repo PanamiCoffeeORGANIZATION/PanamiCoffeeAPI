@@ -5,13 +5,16 @@ const { body, check } = require('express-validator');
 // Custom middlewares
 const {validateJWT, validationFields, isAdminRole, hasRole } = require('../middlewares');
 
-const { getUsers, usuariosPut, registerUser, usuariosDelete, usuariosPatch, addPurchase, getUserByID, validateToken } = require('../controllers/userController');
+const { getUsers, getPurchases, usuariosPut, registerUser, usuariosDelete, usuariosPatch, addPurchase, getUserByID, validateToken } = require('../controllers/userController');
 const { emailExists, isValidRole, userByIdExists } = require('../helpers/validatorDB');
 
 const router = Router();
 
 // GET ALL
 router.get('/', getUsers );
+
+// GET PURCHASES
+router.get('/purchases', getPurchases );
 
 // GET ONE
 router.get('/:id', [

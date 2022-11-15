@@ -17,6 +17,25 @@ const getUsers = async (req = request, res = response) => {
 
 }
 
+// GET ALL PURCHASES
+const getPurchases = async (req = request, res = response) => {
+
+    const users = await User.find();
+    const purchases = [];
+
+    users.map( user => {
+        user.purchase.map( purch => {
+            purch.email = user.email;
+            purchases.push( purch );
+        })
+    })
+
+    res.json({
+        purchases
+    })
+
+}
+
 // GET ONE
 const getUserByID = async ( req, res = response ) => {
 
@@ -149,10 +168,11 @@ const usuariosDelete = async (req, res = response) => {
 
 module.exports = {
     addPurchase,
+    getPurchases,
     getUserByID,
     getUsers,
     registerUser,
     usuariosPut,
     usuariosDelete,
-    validateToken
+    validateToken,
 }
