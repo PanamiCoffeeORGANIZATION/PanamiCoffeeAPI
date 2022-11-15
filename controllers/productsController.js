@@ -108,6 +108,7 @@ const createProduct = async (req, res = response) => {
 
     res.status(201).json({
         ok: true,
+        msg: "Producto creado con éxito",
         product
     })
 
