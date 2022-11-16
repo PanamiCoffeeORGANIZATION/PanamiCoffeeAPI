@@ -31,7 +31,7 @@ const ProductSchema = Schema({
     },
     img : {
         type: String,
-        default: "https://img.freepik.com/vector-gratis/espuma-amor-cafe-frijoles-icono-dibujos-animados-ilustracion_138676-2575.jpg?w=740&t=st=1667508177~exp=1667508777~hmac=c360eb0dc116570d04bbbeacca3097b99a280aa72034751514c7078b69569e84"
+        default: 'https://res.cloudinary.com/samuelrm5/image/upload/v1668624007/products/sloth_vtsksu.jpg'
     },
 });
 
