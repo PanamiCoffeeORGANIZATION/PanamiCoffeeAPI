@@ -1,5 +1,7 @@
 const { response, request } = require("express");
 const Product = require("../models/product");
+const cloudinary = require('cloudinary').v2
+cloudinary.config(process.env.CLOUDINARY_URL);
 
 
 // GET Products
@@ -64,6 +66,14 @@ const updateProduct = async (req, res = response) => {
 
     const { state, user, ...data } = req.body;
     data.user = req.user._id;
+
+    // TODO _ VALIDAR QUE CUANDO SE ACTUALIZA UN PRODUCTO Y TRAE UNAIMAGEN, SE DEBE LIMINAR LA ANTERIOR DE CLOUDINARY
+    // if ( data.img ) {
+    //     const nameArr = model.img.split('/');
+    //     const name = nameArr[ nameArr.length - 1 ];
+    //     const [ public_id ] = name.split('.');
+    //     await cloudinary.uploader.destroy( collection+'/'+public_id );
+    // }
 
     await Product.findByIdAndUpdate(id, data, { new: true });
 

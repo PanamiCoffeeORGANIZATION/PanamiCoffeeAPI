@@ -75,7 +75,7 @@ const searchProducts = async (term = "", res = response) => {
     const product = await Product.find({
         $or: [{ name: regex }, { description: regex }],
         $and: [{ state: true }],
-    });
+    }).populate('category', 'name');
 
     res.json({
         result: product,
